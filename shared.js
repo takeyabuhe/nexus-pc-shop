@@ -104,8 +104,21 @@ document.addEventListener('click', e => {
 });
 
 function doLogoutFromHeader() {
-  if (confirm('ログアウトしますか？')) {
+  if (!confirm('このアカウントをログアウトしますか？')) return;
+  const accounts = getAccounts();
+  const activeIdx = getActiveIdx();
+  if (activeIdx >= 0 && activeIdx < accounts.length) {
+    accounts.splice(activeIdx, 1);
+    saveAccounts(accounts);
+  }
+  if (accounts.length > 0) {
+    const newIdx = Math.min(activeIdx, accounts.length - 1);
+    localStorage.setItem('nexus_active_idx', newIdx);
+    localStorage.setItem('nexus_user', JSON.stringify(accounts[newIdx]));
+    location.reload();
+  } else {
     localStorage.removeItem('nexus_user');
+    localStorage.removeItem('nexus_active_idx');
     location.href = 'index.html';
   }
 }
@@ -162,8 +175,64 @@ function getUser() {
   try { return JSON.parse(localStorage.getItem('nexus_user') || 'null'); } catch(e) { return null; }
 }
 
+// ===== マルチアカウント管理 =====
+function getAccounts() {
+  try { return JSON.parse(localStorage.getItem('nexus_accounts') || '[]'); } catch(e) { return []; }
+}
+function saveAccounts(accounts) {
+  localStorage.setItem('nexus_accounts', JSON.stringify(accounts));
+}
+function getActiveIdx() {
+  const idx = parseInt(localStorage.getItem('nexus_active_idx') || '-1', 10);
+  return isNaN(idx) ? -1 : idx;
+}
+function addAccountToList(user) {
+  const accounts = getAccounts();
+  const existingIdx = accounts.findIndex(a => a.email === user.email);
+  let newIdx;
+  if (existingIdx >= 0) {
+    accounts[existingIdx] = user;
+    newIdx = existingIdx;
+  } else {
+    accounts.push(user);
+    newIdx = accounts.length - 1;
+  }
+  saveAccounts(accounts);
+  localStorage.setItem('nexus_active_idx', newIdx);
+  localStorage.setItem('nexus_user', JSON.stringify(user));
+}
+function switchAccount(idx) {
+  const accounts = getAccounts();
+  if (idx < 0 || idx >= accounts.length) return;
+  localStorage.setItem('nexus_active_idx', idx);
+  localStorage.setItem('nexus_user', JSON.stringify(accounts[idx]));
+  location.reload();
+}
+// 既存セッションをアカウントリストに移行（後方互換）
+(function() {
+  const user = getUser();
+  if (user && getAccounts().length === 0) {
+    addAccountToList(user);
+  }
+})();
+
 function renderHeader(activePage = '') {
   const user = getUser();
+  const accounts = getAccounts();
+  const activeIdx = getActiveIdx();
+  const acctListHTML = (accounts.length > 0 ? accounts : [user]).map(function(acc, idx) {
+    const isActive = accounts.length > 0 ? idx === activeIdx : true;
+    const clickAttr = !isActive ? ' onclick="switchAccount(' + idx + ')"' : '';
+    const checkHTML = isActive ? '<div class="acct-check">✓</div>' : '';
+    return '<div class="acct-item' + (isActive ? ' active' : '') + '"' + clickAttr + '>'
+      + '<div class="acct-avatar">' + (acc.name || acc.email).charAt(0).toUpperCase() + '</div>'
+      + '<div class="acct-info">'
+      + '<div class="acct-name">' + acc.name + '</div>'
+      + '<div class="acct-email">' + acc.email + '</div>'
+      + '</div>'
+      + checkHTML
+      + '</div>';
+  }).join('');
   const mypageLink = user ? 'mypage.html' : 'login.html';
   const memberBlock = user ? `
           <div class="member-dropdown-wrap" id="member-dropdown-wrap">
@@ -172,7 +241,14 @@ function renderHeader(activePage = '') {
               マイページ
             </a>
             <div class="member-dropdown" id="member-dropdown">
-              <div class="member-dropdown-header">会員メニュー</div>
+              <div class="member-dropdown-header">アカウント切り替え</div>
+              <div class="acct-list">${acctListHTML}</div>
+              <div class="acct-actions">
+                <a href="login.html?add=1" class="acct-add-btn">
+                  <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  別アカウントを追加
+                </a>
+              </div>
               <div class="member-dropdown-body">
                 <a href="mypage.html" class="btn-member-login">
                   <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -182,9 +258,6 @@ function renderHeader(activePage = '') {
                   <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                   ログアウト
                 </button>
-              </div>
-              <div class="member-dropdown-footer">
-                <span style="color:var(--accent);font-size:11px;">${user.name}</span> でログイン中
               </div>
             </div>
           </div>` : `

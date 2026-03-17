@@ -340,10 +340,7 @@
 
   function doLogout() {
     // ★ Firebase連携時: firebase.auth().signOut()
-    if (confirm('ログアウトしますか？')) {
-      localStorage.removeItem('nexus_user');
-      location.href = 'index.html';
-    }
+    doLogoutFromHeader();
   }
 </script>
 </body>

@@ -134,8 +134,9 @@
   document.getElementById('footer-mount').innerHTML = renderFooter();
   injectCartDropdown();
 
-  // すでにログイン済みなら直接マイページへ
-  if (localStorage.getItem('nexus_user')) {
+  // すでにログイン済みかつアカウント追加モードでなければマイページへ
+  const isAddMode = new URLSearchParams(location.search).get('add') === '1';
+  if (!isAddMode && localStorage.getItem('nexus_user')) {
     location.href = 'mypage.html';
   }
 
@@ -157,7 +158,7 @@
 
     // ★ デモ用：入力があれば仮ログイン（Firebase連携時に差し替え）
     const user = { email, name: email.split('@')[0], since: '2026年3月' };
-    localStorage.setItem('nexus_user', JSON.stringify(user));
+    addAccountToList(user);
 
     // ログイン後の遷移先（来た経路に戻る）
     const redirect = new URLSearchParams(location.search).get('redirect') || 'mypage.html';
