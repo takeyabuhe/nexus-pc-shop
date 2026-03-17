@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>よくある質問（FAQ） | NEXUS PC</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  .faq-tabs { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+  .faq-tab {
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text2);
+    font-size: 12px; padding: 8px 20px; cursor: pointer; transition: all 0.2s;
+  }
+  .faq-tab.active, .faq-tab:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.05); }
+
+  .faq-group { margin-bottom: 40px; display: none; }
+  .faq-group.active { display: block; }
+  .faq-group-title {
+    font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700;
+    color: var(--white); margin-bottom: 16px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-item { border: 1px solid var(--border); margin-bottom: 8px; overflow: hidden; }
+  .faq-q {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 20px; cursor: pointer; transition: background 0.2s;
+    background: var(--card);
+  }
+  .faq-q:hover { background: rgba(0,229,255,0.03); }
+  .faq-q-text { font-size: 14px; font-weight: 500; color: var(--text); display: flex; gap: 12px; align-items: flex-start; }
+  .faq-q-label { color: var(--accent); font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+  .faq-icon { color: var(--accent); font-size: 20px; transition: transform 0.2s; flex-shrink: 0; }
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+  .faq-a {
+    padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s;
+    background: var(--bg2);
+  }
+  .faq-item.open .faq-a { max-height: 400px; padding: 16px 20px; }
+  .faq-a p { font-size: 13px; color: var(--text2); line-height: 2; }
+  .faq-a-label { color: var(--accent2); font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 16px; margin-right: 12px; }
+
+  .contact-cta {
+    background: var(--card); border: 1px solid var(--border); border-top: 2px solid var(--accent);
+    padding: 32px; text-align: center; margin-top: 48px;
+  }
+  .contact-cta h3 { font-family: 'Rajdhani', sans-serif; font-size: 20px; color: var(--white); margin-bottom: 8px; }
+  .contact-cta p { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">HOME</a><span>›</span>よくある質問</div>
+    <div class="page-title">よくある質問（FAQ）</div>
+  </div>
+</div>
+
+<div class="page-content" style="max-width:860px">
+
+  <div class="faq-tabs">
+    <button class="faq-tab active" onclick="showGroup('order')">ご注文について</button>
+    <button class="faq-tab" onclick="showGroup('shipping')">配送・お届けについて</button>
+    <button class="faq-tab" onclick="showGroup('payment')">お支払いについて</button>
+    <button class="faq-tab" onclick="showGroup('product')">商品・スペックについて</button>
+    <button class="faq-tab" onclick="showGroup('return')">返品・保証について</button>
+  </div>
+
+  <!-- ご注文 -->
+  <div class="faq-group active" id="group-order">
+    <div class="faq-group-title">ご注文について</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>注文後にキャンセルや変更はできますか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>ご注文確定後のキャンセル・変更は、在庫確認メール送信前に限り承っております。お電話またはお問い合わせフォームよりお早めにご連絡ください。カスタマイズ注文（BTO）につきましては、組み立て着手後のキャンセルはお受けできません。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>会員登録なしで購入できますか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>はい、ゲスト購入が可能です。ただし、会員登録していただくと購入履歴の確認や次回購入時の住所自動入力など便利な機能をご利用いただけます。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>カスタマイズ注文（BTO）の納期はどのくらいですか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>通常のカスタマイズ注文は、お支払い確認後7〜14営業日以内の発送を目安としております。パーツの在庫状況によって前後する場合がございます。ハイエンド構成や特殊なカスタマイズの場合は別途ご案内いたします。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 配送 -->
+  <div class="faq-group" id="group-shipping">
+    <div class="faq-group-title">配送・お届けについて</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>送料はいくらかかりますか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>全国送料無料でお届けいたします。沖縄・離島を含む全国対応しております。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>配送日時の指定はできますか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>はい、ご注文時に配送日時のご希望をご指定いただけます。ただし、在庫状況・製造状況によりご希望に添えない場合がございますのでご了承ください。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>海外への発送はできますか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>現在、海外への発送は承っておりません。日本国内への配送のみ対応しております。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- お支払い -->
+  <div class="faq-group" id="group-payment">
+    <div class="faq-group-title">お支払いについて</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>使えるクレジットカードの種類は？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>VISA・MasterCard・JCB・American Express・Dinersに対応しております。分割払い・リボ払いはご利用のカード会社へお問い合わせください。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>銀行振込の場合、入金期限はありますか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>ご注文確定後7日以内にお振込みをお願いいたします。期限を過ぎた場合はご注文をキャンセルとさせていただく場合がございます。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 商品 -->
+  <div class="faq-group" id="group-product">
+    <div class="faq-group-title">商品・スペックについて</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>ゲーミングPC初心者ですが、どのモデルを選べばいいですか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>まず遊びたいゲームの推奨スペックをご確認ください。FPSやMOBAなど軽めのゲームであればエントリーモデル（RTX 5060搭載）で十分です。フルHD〜2K解像度での本格ゲーミングにはスタンダードモデル（RTX 5070搭載）をおすすめします。お気軽にお問い合わせフォームからご相談ください。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>OSは付属していますか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>標準構成はWindows 11 Homeがプリインストールされています。OS非搭載モデルもご用意しておりますので、カスタマイズ注文時にお選びいただけます。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 返品 -->
+  <div class="faq-group" id="group-return">
+    <div class="faq-group-title">返品・保証について</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>保証期間はどのくらいですか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>全製品に1年間の無償保証が付属しています。保証期間内の故障・初期不良については無償で修理または交換対応いたします。延長保証（最大3年）もオプションでご用意しております。</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-text"><span class="faq-q-label">Q</span>初期不良があった場合はどうすればいいですか？</div>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">
+        <p><span class="faq-a-label">A</span>商品到着後7日以内に、お問い合わせフォームまたはお電話にてご連絡ください。当社が着払いで引き取り、修理または交換品を送付いたします。お客様のご負担は一切ございません。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="contact-cta">
+    <h3>解決しない場合はお気軽にご相談ください</h3>
+    <p>平日10:00〜18:00、専門スタッフが対応いたします</p>
+    <a href="contact.html" class="btn-primary">お問い合わせフォームへ</a>
+  </div>
+
+</div>
+
+<div id="footer-mount"></div>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderHeader();
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+
+  function showGroup(name) {
+    document.querySelectorAll('.faq-group').forEach(g => g.classList.remove('active'));
+    document.querySelectorAll('.faq-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('group-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    item.classList.toggle('open');
+  }
+</script>
+</body>
+</html>

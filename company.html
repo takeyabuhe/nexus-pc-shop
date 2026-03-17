@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>会社概要 | NEXUS PC</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<div id="header-mount"></div>
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">HOME</a><span>›</span>会社概要</div>
+    <div class="page-title">会社概要</div>
+  </div>
+</div>
+<div class="page-content">
+  <div class="section-block">
+    <table>
+      <tr><th>会社名</th><td>株式会社〇〇〇〇</td></tr>
+      <tr><th>設立</th><td>2020年4月1日</td></tr>
+      <tr><th>代表取締役</th><td>〇〇 〇〇</td></tr>
+      <tr><th>所在地</th><td>〒000-0000 東京都〇〇区〇〇 0-0-0</td></tr>
+      <tr><th>電話番号</th><td>00-0000-0000</td></tr>
+      <tr><th>メールアドレス</th><td>info@example.com</td></tr>
+      <tr><th>事業内容</th><td>パソコン・周辺機器の販売<br>BTOパソコンの製造・販売<br>PCサポート・修理サービス</td></tr>
+      <tr><th>取引銀行</th><td>〇〇銀行 〇〇支店</td></tr>
+    </table>
+  </div>
+</div>
+<div id="footer-mount"></div>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderHeader();
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+</script>
+</body>
+</html>

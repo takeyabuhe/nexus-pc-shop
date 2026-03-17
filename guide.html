@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ご利用ガイド | NEXUS PC</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  .step-list { display: flex; flex-direction: column; gap: 0; margin-bottom: 16px; }
+  .step {
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 20px 0; border-bottom: 1px solid var(--border); position: relative;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--accent); color: #000;
+    font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .step-content h3 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+  .step-content p { font-size: 13px; color: var(--text2); line-height: 1.8; }
+
+  .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+  .info-card {
+    background: var(--card); border: 1px solid var(--border); padding: 20px;
+  }
+  .info-card h3 {
+    font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700;
+    color: var(--white); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .info-card p { font-size: 12px; color: var(--text2); line-height: 1.8; }
+</style>
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">HOME</a><span>›</span>ご利用ガイド</div>
+    <div class="page-title">ご利用ガイド</div>
+  </div>
+</div>
+
+<div class="page-content">
+
+  <div class="section-block">
+    <h2>ご注文の流れ</h2>
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>商品を選ぶ</h3>
+          <p>商品一覧から気になるPCを選び、スペックをご確認ください。カスタマイズ注文の場合は「カスタマイズ・お見積り」ボタンからご希望の構成をお選びいただけます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>カートに入れる</h3>
+          <p>購入したい商品の「カートへ」ボタンをクリックしてください。複数商品をまとめてご注文いただけます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>お客様情報・お支払い方法の入力</h3>
+          <p>お届け先住所・お支払い方法・配送希望日時をご入力ください。会員の方はログインすると入力が省略できます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>注文確認・確定</h3>
+          <p>ご入力内容をご確認いただき「注文を確定する」ボタンを押してください。ご登録のメールアドレスに注文確認メールが届きます。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>組み立て・検品・発送</h3>
+          <p>お支払い確認後、熟練スタッフが丁寧に組み立て・動作確認を行い発送いたします。発送時に追跡番号をメールにてご連絡いたします。</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h3>お受け取り・セットアップ</h3>
+          <p>商品をお受け取りの際は外装の破損がないかご確認ください。初期設定でご不明な点がございましたら、サポートまでお気軽にご連絡ください。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2>お支払い・配送について</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>💳 お支払い方法</h3>
+        <p>
+          ・クレジットカード（VISA・Master・JCB・AMEX）<br>
+          ・銀行振込（注文後7日以内）<br>
+          ・コンビニ払い（注文後3日以内）<br>
+          ・代金引換（手数料330円）
+        </p>
+      </div>
+      <div class="info-card">
+        <h3>📦 配送について</h3>
+        <p>
+          ・全国送料無料<br>
+          ・ヤマト運輸にて発送<br>
+          ・日時指定対応<br>
+          ・通常3〜7営業日で発送
+        </p>
+      </div>
+      <div class="info-card">
+        <h3>🔧 保証・サポート</h3>
+        <p>
+          ・全製品1年間無償保証<br>
+          ・延長保証オプションあり（最大3年）<br>
+          ・電話・メールサポート対応<br>
+          ・初期不良は着払いで対応
+        </p>
+      </div>
+      <div class="info-card">
+        <h3>↩️ 返品・交換</h3>
+        <p>
+          ・初期不良：到着後7日以内<br>
+          ・お客様都合：未開封・到着後8日以内<br>
+          ・BTO製品の返品は初期不良のみ<br>
+          ・返送送料はお客様負担
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="footer-mount"></div>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderHeader();
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+</script>
+</body>
+</html>

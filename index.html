@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS PC - ゲーミングPC専門店</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    background: linear-gradient(135deg, #0a0a0f 0%, #0d0820 50%, #080d1a 100%);
+    overflow: hidden;
+    min-height: 500px;
+  }
+
+  /* ヒーロー背景画像 — ここにURLを入れると背景画像になります */
+  /* .hero { background-image: url('あなたの画像URL'); background-size: cover; background-position: center; } */
+
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(10,10,15,0.92) 40%, rgba(10,10,15,0.3) 100%);
+    pointer-events: none;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -50%; right: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(123,47,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1400px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+    padding: 60px 24px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-label {
+    font-family: 'Rajdhani', sans-serif; font-size: 11px;
+    letter-spacing: 4px; color: var(--accent); margin-bottom: 16px; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif; font-size: 52px;
+    font-weight: 700; line-height: 1.1; color: var(--white); margin-bottom: 16px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { color: var(--text2); font-size: 14px; margin-bottom: 32px; max-width: 440px; }
+  .hero-btns { display: flex; gap: 12px; }
+
+  .btn-secondary {
+    background: transparent; color: var(--text); font-size: 13px;
+    padding: 11px 28px; border: 1px solid var(--border);
+    cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Hero右側：画像 or フィーチャーカード */
+  .hero-featured {
+    background: rgba(17,17,32,0.85);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 24px; position: relative;
+    backdrop-filter: blur(8px);
+  }
+  .featured-badge {
+    position: absolute; top: -10px; left: 20px;
+    background: var(--accent); color: #000;
+    font-size: 10px; font-weight: 700; padding: 3px 10px; letter-spacing: 2px;
+  }
+
+  /* ★ 商品画像エリア — ここに実際の画像が入ります */
+  .featured-img {
+    width: 100%; height: 220px;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; overflow: hidden; position: relative;
+  }
+  .featured-img img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  /* 画像がない場合のプレースホルダー */
+  .img-placeholder {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    color: var(--text2); font-size: 12px; text-align: center;
+    width: 100%; height: 100%;
+  }
+  .img-placeholder svg { opacity: 0.3; }
+
+  .featured-name {
+    font-family: 'Rajdhani', sans-serif; font-size: 18px;
+    font-weight: 700; color: var(--white); margin-bottom: 8px;
+  }
+  .featured-specs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+  .spec-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+  .spec-item::before { content: ''; width: 4px; height: 4px; background: var(--accent); display: block; flex-shrink: 0; }
+  .featured-price { display: flex; align-items: baseline; gap: 8px; }
+  .price-main { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: var(--accent); }
+  .price-tax { font-size: 11px; color: var(--text2); }
+
+  /* ===== CATEGORIES ===== */
+  .section { max-width: 1400px; margin: 0 auto; padding: 48px 24px; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .section-title {
+    font-family: 'Rajdhani', sans-serif; font-size: 22px;
+    font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::before { content: ''; width: 3px; height: 22px; background: var(--accent); display: block; }
+  .see-all { font-size: 12px; color: var(--accent); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+
+  .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .cat-card {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 20px 16px; text-align: center; cursor: pointer;
+    transition: all 0.2s; text-decoration: none; display: block;
+  }
+  .cat-card:hover { border-color: var(--accent); background: rgba(0,229,255,0.05); }
+
+  /* ★ カテゴリ画像エリア */
+  .cat-img {
+    width: 60px; height: 60px; margin: 0 auto 12px;
+    background: var(--bg2); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; border: 1px solid var(--border);
+  }
+  .cat-img img { width: 100%; height: 100%; object-fit: cover; }
+  .cat-icon { font-size: 24px; }
+  .cat-name { font-size: 12px; font-weight: 700; color: var(--text); display: block; }
+  .cat-count { font-size: 11px; color: var(--text2); margin-top: 4px; display: block; }
+
+  /* ===== FILTER ===== */
+  .filter-bar { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 12px 24px; }
+  .filter-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .filter-label { font-size: 12px; color: var(--text2); white-space: nowrap; }
+  .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text2);
+    font-size: 11px; padding: 5px 12px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .chip:hover, .chip.active { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.05); }
+
+  /* ===== PRODUCTS ===== */
+  .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .product-card {
+    background: var(--card); border: 1px solid var(--border);
+    cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden;
+  }
+  .product-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent2), var(--accent)); opacity: 0; transition: opacity 0.2s;
+  }
+  .product-card:hover { border-color: rgba(0,229,255,0.3); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+  .product-card:hover::before { opacity: 1; }
+
+  /* ★ 商品画像エリア — 実際の商品画像を入れる場所 */
+  .product-img {
+    width: 100%; height: 180px;
+    background: linear-gradient(135deg, #111120, #0d0d20);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; }
+  .product-img .img-placeholder { font-size: 11px; }
+
+  .product-tag {
+    position: absolute; top: 10px; left: 10px;
+    color: #fff; font-size: 10px; font-weight: 700; padding: 3px 8px; letter-spacing: 1px;
+  }
+  .product-tag.new { background: var(--accent2); }
+  .product-tag.sale { background: var(--accent3); }
+  .product-tag.popular { background: #ff9500; color: #000; }
+
+  .product-info { padding: 16px; }
+  .product-brand { font-size: 10px; color: var(--text2); letter-spacing: 2px; margin-bottom: 4px; text-transform: uppercase; }
+  .product-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; line-height: 1.4; }
+  .product-spec-list { display: flex; flex-direction: column; gap: 3px; margin-bottom: 12px; }
+  .product-spec { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+  .product-spec::before { content: ''; width: 3px; height: 3px; background: var(--accent2); display: block; border-radius: 50%; flex-shrink: 0; }
+  .product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); }
+  .product-price { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: var(--accent); }
+  .product-price span { font-size: 11px; color: var(--text2); font-family: 'Noto Sans JP', sans-serif; font-weight: 400; }
+  .btn-cart {
+    background: var(--accent); color: #000; border: none; font-size: 11px; font-weight: 700;
+    padding: 7px 14px; cursor: pointer;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); transition: all 0.2s;
+  }
+  .btn-cart:hover { background: #33ecff; }
+
+  /* ===== TIER ===== */
+  .comparison { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 48px 24px; }
+  .comparison-inner { max-width: 1400px; margin: 0 auto; }
+  .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .tier-card { background: var(--card); border: 1px solid var(--border); padding: 24px; position: relative; }
+  .tier-card.recommended { border-color: var(--accent); }
+  .tier-card.recommended::before {
+    content: 'おすすめ'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #000; font-size: 10px; font-weight: 700; padding: 3px 12px; letter-spacing: 1px;
+  }
+  .tier-name { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .tier-desc { font-size: 12px; color: var(--text2); margin-bottom: 16px; }
+  .tier-price { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; color: var(--accent); margin-bottom: 16px; }
+  .tier-price span { font-size: 14px; color: var(--text2); font-family: 'Noto Sans JP', sans-serif; font-weight: 400; }
+  .tier-specs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .tier-spec { display: flex; justify-content: space-between; font-size: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .tier-spec-label { color: var(--text2); }
+  .tier-spec-val { color: var(--text); font-weight: 500; }
+  .btn-tier {
+    display: block; width: 100%; padding: 11px; text-align: center;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    border: 1px solid var(--border); background: transparent; color: var(--text); transition: all 0.2s;
+  }
+  .tier-card.recommended .btn-tier { background: var(--accent); border-color: var(--accent); color: #000; }
+  .btn-tier:hover { border-color: var(--accent); color: var(--accent); }
+  .tier-card.recommended .btn-tier:hover { background: #33ecff; }
+
+  .divider { height: 1px; background: var(--border); }
+</style>
+</head>
+<body>
+<div id="header-mount"></div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-label">GAMING PC SPECIALIST</div>
+      <h1>最強の<em>1台</em>で<br>戦場を制す</h1>
+      <p>最新RTX 5090搭載から入門向けまで、あらゆるニーズに対応したゲーミングPCを取り揃えています。全機種日本国内組み立て・動作保証付き。</p>
+      <div class="hero-btns">
+        <a href="#products" class="btn-primary">製品一覧を見る</a>
+        <a href="#tiers" class="btn-secondary">スペック診断</a>
+      </div>
+    </div>
+    <div class="hero-featured">
+      <div class="featured-badge">FEATURED</div>
+
+      <!-- ★ ここにヒーロー商品の画像URL を入れてください -->
+      <!-- 例: <img src="https://drive.google.com/uc?id=XXXX" alt="注目商品"> -->
+      <div class="featured-img">
+        <div class="img-placeholder">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          商品画像をここに表示<br><small>GoogleドライブのURLを貼るだけ</small>
+        </div>
+      </div>
+
+      <div class="featured-name">NEXUS APEX Z56 / ハイエンドモデル</div>
+      <div class="featured-specs">
+        <div class="spec-item">Intel Core Ultra 9-285K プロセッサ</div>
+        <div class="spec-item">GeForce RTX 5090 32GB</div>
+        <div class="spec-item">DDR5-5600 64GB メモリ</div>
+        <div class="spec-item">4TB NVMe Gen.4 SSD</div>
+      </div>
+      <div class="featured-price">
+        <span class="price-main">¥698,000</span>
+        <span class="price-tax">税込 ¥767,800</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">カテゴリから選ぶ</div>
+  </div>
+  <div class="cat-grid">
+    <a href="#" class="cat-card">
+      <!-- ★ カテゴリ画像: <div class="cat-img"><img src="URL" alt="ゲーミングPC"></div> -->
+      <div class="cat-img"><span class="cat-icon">🎮</span></div>
+      <span class="cat-name">ゲーミングPC</span>
+      <span class="cat-count">全98モデル</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-img"><span class="cat-icon">🎨</span></div>
+      <span class="cat-name">クリエイターPC</span>
+      <span class="cat-count">全32モデル</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-img"><span class="cat-icon">⚡</span></div>
+      <span class="cat-name">ハイエンド</span>
+      <span class="cat-count">全24モデル</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-img"><span class="cat-icon">💡</span></div>
+      <span class="cat-name">入門・コスパ重視</span>
+      <span class="cat-count">全18モデル</span>
+    </a>
+    <a href="#" class="cat-card">
+      <div class="cat-img"><span class="cat-icon">🖥️</span></div>
+      <span class="cat-name">コンパクト</span>
+      <span class="cat-count">全14モデル</span>
+    </a>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- Filter -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <span class="filter-label">絞り込み：</span>
+    <div class="filter-chips">
+      <span class="chip active">すべて</span>
+      <span class="chip">RTX 5090</span>
+      <span class="chip">RTX 5080</span>
+      <span class="chip">RTX 5070Ti</span>
+      <span class="chip">RTX 5070</span>
+      <span class="chip">RTX 5060</span>
+      <span class="chip">～20万円</span>
+      <span class="chip">～30万円</span>
+      <span class="chip">～50万円</span>
+      <span class="chip">Ryzen</span>
+      <span class="chip">Intel</span>
+    </div>
+  </div>
+</div>
+
+<!-- Products -->
+<div class="section" id="products">
+  <div class="section-header">
+    <div class="section-title">ゲーミングPC 一覧</div>
+    <a href="#" class="see-all">すべて見る →</a>
+  </div>
+  <div class="product-grid">
+
+    <div class="product-card">
+      <div class="product-img">
+        <!-- ★ 商品画像: <img src="GoogleドライブのURL" alt="商品名"> -->
+        <div class="img-placeholder">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="product-tag sale">SALE</div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">APEX Z56BL / ウルトラハイエンド</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Core Ultra 9-285K / RTX 5090</div>
+          <div class="product-spec">DDR5 64GB / 4TB NVMe SSD</div>
+          <div class="product-spec">1200W 電源 / 水冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥698,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="img-placeholder"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="product-tag popular">人気No.1</div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">APEX Z54MW / ハイエンドモデル</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Core Ultra 9-285K / RTX 5080</div>
+          <div class="product-spec">DDR5 32GB / 2TB NVMe SSD</div>
+          <div class="product-spec">1000W 電源 / 水冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥468,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="img-placeholder"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="product-tag new">NEW</div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">RYZEN R62H / ミドルハイモデル</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Ryzen 7 9800X3D / RTX 5070Ti</div>
+          <div class="product-spec">DDR5 32GB / 2TB NVMe SSD</div>
+          <div class="product-spec">850W 電源 / 空冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥348,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="img-placeholder"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">APEX Z52S / スタンダードモデル</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Core Ultra 7-265KF / RTX 5070</div>
+          <div class="product-spec">DDR5 16GB / 1TB NVMe SSD</div>
+          <div class="product-spec">750W 電源 / 水冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥258,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="img-placeholder"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="product-tag sale">SALE</div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">RYZEN R58 / コスパモデル</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Ryzen 7 9700X / RTX 5060Ti</div>
+          <div class="product-spec">DDR5 16GB / 1TB NVMe SSD</div>
+          <div class="product-spec">650W 電源 / 空冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥189,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="img-placeholder"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="product-tag new">NEW</div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">APEX Z50E / エントリーモデル</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Core Ultra 5-245F / RTX 5060</div>
+          <div class="product-spec">DDR5 16GB / 1TB NVMe SSD</div>
+          <div class="product-spec">650W 電源 / 空冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥148,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="img-placeholder"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">MINI M10 / コンパクトモデル</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Core Ultra 7-265K / RTX 5060Ti</div>
+          <div class="product-spec">DDR5 16GB / 1TB NVMe SSD</div>
+          <div class="product-spec">650W SFX / 水冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥228,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-img">
+        <div class="img-placeholder"><svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+        <div class="product-tag popular">人気</div>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">NEXUS</div>
+        <div class="product-name">RYZEN R60H / ミドルモデル</div>
+        <div class="product-spec-list">
+          <div class="product-spec">Ryzen 7 9800X3D / RTX 5070</div>
+          <div class="product-spec">DDR5 32GB / 2TB NVMe SSD</div>
+          <div class="product-spec">850W 電源 / 水冷クーラー</div>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">¥298,000<span> 税抜</span></div>
+          <button class="btn-cart">カートへ</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Tier -->
+<div class="comparison" id="tiers">
+  <div class="comparison-inner">
+    <div class="section-header">
+      <div class="section-title">用途別おすすめモデル</div>
+    </div>
+    <div class="tier-grid">
+      <div class="tier-card">
+        <div class="tier-name">ENTRY</div>
+        <div class="tier-desc">FPSゲーム・初めてのゲーミングPC</div>
+        <div class="tier-price">¥148,000<span> 税抜〜</span></div>
+        <div class="tier-specs">
+          <div class="tier-spec"><span class="tier-spec-label">CPU</span><span class="tier-spec-val">Core Ultra 5</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">GPU</span><span class="tier-spec-val">RTX 5060</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">メモリ</span><span class="tier-spec-val">16GB DDR5</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">ストレージ</span><span class="tier-spec-val">1TB NVMe</span></div>
+        </div>
+        <button class="btn-tier">このモデルを見る</button>
+      </div>
+      <div class="tier-card recommended">
+        <div class="tier-name">STANDARD</div>
+        <div class="tier-desc">本格ゲーミング・高解像度・配信向け</div>
+        <div class="tier-price">¥258,000<span> 税抜〜</span></div>
+        <div class="tier-specs">
+          <div class="tier-spec"><span class="tier-spec-label">CPU</span><span class="tier-spec-val">Core Ultra 7 / Ryzen 7</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">GPU</span><span class="tier-spec-val">RTX 5070〜5070Ti</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">メモリ</span><span class="tier-spec-val">32GB DDR5</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">ストレージ</span><span class="tier-spec-val">2TB NVMe</span></div>
+        </div>
+        <button class="btn-tier">このモデルを見る</button>
+      </div>
+      <div class="tier-card">
+        <div class="tier-name">HIGH END</div>
+        <div class="tier-desc">4K・VR・クリエイティブ・競技向け</div>
+        <div class="tier-price">¥468,000<span> 税抜〜</span></div>
+        <div class="tier-specs">
+          <div class="tier-spec"><span class="tier-spec-label">CPU</span><span class="tier-spec-val">Core Ultra 9 / Ryzen 9</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">GPU</span><span class="tier-spec-val">RTX 5080〜5090</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">メモリ</span><span class="tier-spec-val">32〜64GB DDR5</span></div>
+          <div class="tier-spec"><span class="tier-spec-label">ストレージ</span><span class="tier-spec-val">2〜4TB NVMe</span></div>
+        </div>
+        <button class="btn-tier">このモデルを見る</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footer-mount"></div>
+
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderHeader('home');
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', function() {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.btn-cart').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      this.textContent = '✓ 追加済み';
+      this.style.background = '#7b2fff';
+      setTimeout(() => { this.textContent = 'カートへ'; this.style.background = ''; }, 2000);
+    });
+  });
+</script>
+</body>
+</html>
