@@ -103,6 +103,13 @@ document.addEventListener('click', e => {
   }
 });
 
+function doLogoutFromHeader() {
+  if (confirm('ログアウトしますか？')) {
+    localStorage.removeItem('nexus_user');
+    location.href = 'index.html';
+  }
+}
+
 function toggleMemberDropdown() {
   const dd = document.getElementById('member-dropdown');
   if (dd) dd.classList.toggle('open');
@@ -151,7 +158,42 @@ function injectCartDropdown() {
   });
 }
 
+function getUser() {
+  try { return JSON.parse(localStorage.getItem('nexus_user') || 'null'); } catch(e) { return null; }
+}
+
 function renderHeader(activePage = '') {
+  const user = getUser();
+  const mypageLink = user ? 'mypage.html' : 'login.html';
+  const memberBlock = user ? `
+          <div class="member-dropdown-wrap" id="member-dropdown-wrap">
+            <a href="#" onclick="toggleMemberDropdown();return false;">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              マイページ
+            </a>
+            <div class="member-dropdown" id="member-dropdown">
+              <div class="member-dropdown-header">会員メニュー</div>
+              <div class="member-dropdown-body">
+                <a href="mypage.html" class="btn-member-login">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  マイページ
+                </a>
+                <button class="btn-member-register" onclick="doLogoutFromHeader()" style="border:none;cursor:pointer;width:100%;">
+                  <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  ログアウト
+                </button>
+              </div>
+              <div class="member-dropdown-footer">
+                <span style="color:var(--accent);font-size:11px;">${user.name}</span> でログイン中
+              </div>
+            </div>
+          </div>` : `
+          <div class="member-dropdown-wrap" id="member-dropdown-wrap">
+            <a href="login.html">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              マイページ
+            </a>
+          </div>`;
   return `
   <div class="notice-bar">🎮 新製品 RTX 5090 搭載モデル 入荷しました！ &nbsp;|&nbsp; 全国送料無料 &nbsp;|&nbsp; 最短翌日発送対応</div>
   <header>
@@ -162,28 +204,7 @@ function renderHeader(activePage = '') {
         <input type="text" placeholder="商品名・スペックで検索...">
       </div>
       <div class="header-actions">
-        <div class="member-dropdown-wrap" id="member-dropdown-wrap">
-          <a href="#" onclick="toggleMemberDropdown();return false;">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            マイページ
-          </a>
-          <div class="member-dropdown" id="member-dropdown">
-            <div class="member-dropdown-header">会員メニュー</div>
-            <div class="member-dropdown-body">
-              <a href="mypage.html" class="btn-member-login">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                ログイン
-              </a>
-              <a href="mypage.html" class="btn-member-register">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-                新規会員登録
-              </a>
-            </div>
-            <div class="member-dropdown-footer">
-              <a href="mypage.html">注文履歴・お気に入りはログイン後に確認できます</a>
-            </div>
-          </div>
-        </div>
+        ${memberBlock}
         <a href="#">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           お気に入り
