@@ -84,16 +84,32 @@ function openCartDropdown() {
 function toggleCartDropdown() {
   const dd = document.getElementById('cart-dropdown');
   if (dd) dd.classList.toggle('open');
+  // 会員ドロップダウンは閉じる
+  const memberDd = document.getElementById('member-dropdown');
+  if (memberDd) memberDd.classList.remove('open');
 }
 
-// 外クリックで閉じる
+// 外クリックで閉じる（カート・会員ドロップダウン共通）
 document.addEventListener('click', e => {
-  const wrap = document.getElementById('cart-dropdown-wrap');
-  if (wrap && !wrap.contains(e.target)) {
+  const cartWrap = document.getElementById('cart-dropdown-wrap');
+  if (cartWrap && !cartWrap.contains(e.target)) {
     const dd = document.getElementById('cart-dropdown');
     if (dd) dd.classList.remove('open');
   }
+  const memberWrap = document.getElementById('member-dropdown-wrap');
+  if (memberWrap && !memberWrap.contains(e.target)) {
+    const dd = document.getElementById('member-dropdown');
+    if (dd) dd.classList.remove('open');
+  }
 });
+
+function toggleMemberDropdown() {
+  const dd = document.getElementById('member-dropdown');
+  if (dd) dd.classList.toggle('open');
+  // カートは閉じる
+  const cartDd = document.getElementById('cart-dropdown');
+  if (cartDd) cartDd.classList.remove('open');
+}
 
 function injectCartDropdown() {
   // ヘッダーのカートリンクをドロップダウンに置き換え
@@ -146,10 +162,28 @@ function renderHeader(activePage = '') {
         <input type="text" placeholder="商品名・スペックで検索...">
       </div>
       <div class="header-actions">
-        <a href="#">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          マイページ
-        </a>
+        <div class="member-dropdown-wrap" id="member-dropdown-wrap">
+          <a href="#" onclick="toggleMemberDropdown();return false;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            マイページ
+          </a>
+          <div class="member-dropdown" id="member-dropdown">
+            <div class="member-dropdown-header">会員メニュー</div>
+            <div class="member-dropdown-body">
+              <a href="mypage.html" class="btn-member-login">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                ログイン
+              </a>
+              <a href="mypage.html" class="btn-member-register">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                新規会員登録
+              </a>
+            </div>
+            <div class="member-dropdown-footer">
+              <a href="mypage.html">注文履歴・お気に入りはログイン後に確認できます</a>
+            </div>
+          </div>
+        </div>
         <a href="#">
           <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           お気に入り
