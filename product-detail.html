@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商品詳細 | NEXUS PC</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+
+/* ===== カートドロップダウン ===== */
+.cart-dropdown-wrap { position: relative; }
+
+.cart-badge {
+  position: absolute; top: -6px; right: -6px;
+  background: var(--accent3); color: #fff;
+  font-size: 10px; font-weight: 700;
+  width: 16px; height: 16px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  display: none;
+}
+.cart-badge.show { display: flex; }
+
+.cart-dropdown {
+  display: none;
+  position: absolute; top: calc(100% + 12px); right: 0;
+  width: 340px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
+  z-index: 300;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.cart-dropdown.open { display: block; }
+
+.cart-dropdown-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px; font-weight: 700; color: var(--white);
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.cart-items { max-height: 280px; overflow-y: auto; }
+.cart-empty {
+  padding: 32px 16px; text-align: center;
+  font-size: 12px; color: var(--text2);
+}
+
+.cart-item {
+  display: flex; gap: 12px; padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.cart-item-img {
+  width: 52px; height: 52px; flex-shrink: 0;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cart-item-price { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 700; color: var(--accent); }
+.cart-item-qty { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+.qty-btn {
+  width: 22px; height: 22px; background: var(--bg3);
+  border: 1px solid var(--border); color: var(--text);
+  font-size: 14px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+.qty-num { font-size: 12px; color: var(--text); min-width: 20px; text-align: center; }
+.cart-item-del {
+  background: none; border: none; color: var(--text2);
+  cursor: pointer; font-size: 16px; padding: 0;
+  transition: color 0.15s; align-self: flex-start;
+}
+.cart-item-del:hover { color: var(--accent3); }
+
+.cart-dropdown-footer {
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+}
+.cart-total {
+  display: flex; justify-content: space-between;
+  font-size: 13px; margin-bottom: 12px;
+}
+.cart-total-label { color: var(--text2); }
+.cart-total-price { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: var(--accent); }
+
+.btn-checkout {
+  display: block; width: 100%; background: var(--accent); color: #000;
+  font-size: 13px; font-weight: 700; padding: 11px; border: none;
+  cursor: pointer; text-align: center; text-decoration: none;
+  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  transition: background 0.2s;
+}
+.btn-checkout:hover { background: #33ecff; }
+
+/* ===== 商品詳細 ===== */
+.product-detail-wrap {
+  max-width: 1400px; margin: 0 auto; padding: 40px 24px;
+}
+
+.breadcrumb { font-size: 12px; color: var(--text2); margin-bottom: 24px; }
+.breadcrumb a { color: var(--text2); text-decoration: none; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb span { margin: 0 8px; }
+
+.detail-layout {
+  display: grid; grid-template-columns: 1fr 480px;
+  gap: 48px; align-items: flex-start;
+}
+
+/* 画像エリア */
+.image-area { position: sticky; top: 90px; }
+
+.main-image {
+  width: 100%; aspect-ratio: 4/3;
+  background: var(--card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; margin-bottom: 12px; position: relative;
+}
+.main-image img { width: 100%; height: 100%; object-fit: cover; }
+.main-image .img-placeholder {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 8px; color: var(--text2); font-size: 12px;
+}
+
+.thumb-list { display: flex; gap: 8px; flex-wrap: wrap; }
+.thumb {
+  width: 72px; height: 72px;
+  background: var(--card); border: 1px solid var(--border);
+  cursor: pointer; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.15s; flex-shrink: 0;
+}
+.thumb:hover, .thumb.active { border-color: var(--accent); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb .no-img { font-size: 10px; color: var(--text2); text-align: center; padding: 4px; }
+
+/* 情報エリア */
+.info-area {}
+
+.product-tag-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.tag {
+  font-size: 10px; font-weight: 700; padding: 3px 10px; letter-spacing: 1px;
+}
+.tag.new { background: var(--accent2); color: #fff; }
+.tag.popular { background: #ff9500; color: #000; }
+.tag.sale { background: var(--accent3); color: #fff; }
+.tag.stock-ok { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid var(--accent); }
+.tag.stock-low { background: rgba(255,149,0,0.1); color: #ff9500; border: 1px solid #ff9500; }
+
+.product-brand-label { font-size: 11px; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+
+.product-detail-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px; font-weight: 700; color: var(--white);
+  line-height: 1.2; margin-bottom: 16px;
+}
+
+.price-block { margin-bottom: 20px; }
+.price-big { font-family: 'Rajdhani', sans-serif; font-size: 36px; font-weight: 700; color: var(--accent); }
+.price-tax { font-size: 12px; color: var(--text2); margin-left: 8px; }
+.price-incl { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+.spec-summary {
+  background: var(--bg2); border: 1px solid var(--border);
+  padding: 16px; margin-bottom: 20px;
+}
+.spec-summary-title { font-size: 11px; color: var(--text2); letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
+.spec-row { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.spec-row:last-child { border-bottom: none; }
+.spec-key { color: var(--text2); }
+.spec-val { color: var(--text); font-weight: 500; text-align: right; max-width: 60%; }
+
+.qty-select-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.qty-label { font-size: 12px; color: var(--text2); }
+.qty-ctrl { display: flex; align-items: center; gap: 8px; }
+.qty-ctrl-btn {
+  width: 32px; height: 32px; background: var(--bg3);
+  border: 1px solid var(--border); color: var(--text);
+  font-size: 18px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center; transition: all 0.15s;
+}
+.qty-ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
+.qty-display { font-size: 16px; font-weight: 700; color: var(--text); min-width: 32px; text-align: center; }
+
+.btn-add-cart {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; background: var(--accent); color: #000;
+  font-size: 15px; font-weight: 700; padding: 15px;
+  border: none; cursor: pointer;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  transition: all 0.2s; margin-bottom: 10px;
+}
+.btn-add-cart:hover { background: #33ecff; }
+.btn-add-cart.added { background: #7b2fff; color: #fff; }
+
+.btn-favorite {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; background: transparent; color: var(--text2);
+  font-size: 13px; padding: 11px; border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.2s; margin-bottom: 20px;
+}
+.btn-favorite:hover { border-color: var(--accent3); color: var(--accent3); }
+.btn-favorite.active { border-color: var(--accent3); color: var(--accent3); }
+
+.delivery-info { font-size: 12px; color: var(--text2); line-height: 2; margin-bottom: 20px; }
+.delivery-info span { color: var(--accent); font-weight: 700; }
+
+/* タブ（スペック詳細等） */
+.detail-tabs { margin-top: 48px; }
+.tab-header { display: flex; border-bottom: 1px solid var(--border); }
+.tab-btn {
+  font-size: 13px; font-weight: 700; padding: 12px 20px;
+  background: none; border: none; color: var(--text2);
+  cursor: pointer; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: all 0.2s;
+}
+.tab-btn.active, .tab-btn:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-panel { display: none; padding: 24px 0; }
+.tab-panel.active { display: block; }
+
+.spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.spec-table th {
+  background: var(--bg2); color: var(--text);
+  padding: 10px 16px; border: 1px solid var(--border);
+  text-align: left; font-weight: 700; width: 200px; white-space: nowrap;
+}
+.spec-table td {
+  color: var(--text2); padding: 10px 16px;
+  border: 1px solid var(--border); line-height: 1.6;
+}
+
+.review-avg { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.review-score { font-family: 'Rajdhani', sans-serif; font-size: 48px; font-weight: 700; color: var(--accent); line-height: 1; }
+.stars { color: #ff9500; font-size: 20px; letter-spacing: 2px; }
+.review-count { font-size: 12px; color: var(--text2); }
+
+.review-item { border-bottom: 1px solid var(--border); padding: 16px 0; }
+.review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.review-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.review-date { font-size: 11px; color: var(--text2); }
+.review-stars { color: #ff9500; font-size: 13px; }
+.review-body { font-size: 13px; color: var(--text2); line-height: 1.8; }
+</style>
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="product-detail-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">HOME</a><span>›</span>
+    <a href="category.html?type=gaming">ゲーミングPC</a><span>›</span>
+    APEX Z54MW / ハイエンドモデル
+  </div>
+
+  <div class="detail-layout">
+
+    <!-- 画像エリア -->
+    <div class="image-area">
+      <div class="main-image" id="main-image">
+        <!--
+          ★ 画像を入れる場合:
+          <img src="GoogleドライブのURL" alt="商品メイン画像" id="main-img-el">
+        -->
+        <div class="img-placeholder">
+          <svg width="64" height="64" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>メイン画像<br><small>GoogleドライブのURLを設定</small></span>
+        </div>
+      </div>
+
+      <!-- サムネイル -->
+      <div class="thumb-list" id="thumb-list">
+        <!--
+          ★ サムネイル画像を入れる場合:
+          <div class="thumb active" onclick="changeImage(this, 'URL1')"><img src="URL1" alt="画像1"></div>
+          <div class="thumb" onclick="changeImage(this, 'URL2')"><img src="URL2" alt="画像2"></div>
+        -->
+        <div class="thumb active" onclick="selectThumb(this, 0)"><div class="no-img">画像1</div></div>
+        <div class="thumb" onclick="selectThumb(this, 1)"><div class="no-img">画像2</div></div>
+        <div class="thumb" onclick="selectThumb(this, 2)"><div class="no-img">画像3</div></div>
+        <div class="thumb" onclick="selectThumb(this, 3)"><div class="no-img">画像4</div></div>
+      </div>
+    </div>
+
+    <!-- 情報エリア -->
+    <div class="info-area">
+      <div class="product-tag-row">
+        <span class="tag popular">人気No.1</span>
+        <span class="tag stock-ok">在庫あり</span>
+      </div>
+
+      <div class="product-brand-label">NEXUS</div>
+      <div class="product-detail-name">APEX Z54MW<br>ハイエンドゲーミングPC</div>
+
+      <div class="price-block">
+        <div>
+          <span class="price-big">¥468,000</span>
+          <span class="price-tax">税抜</span>
+        </div>
+        <div class="price-incl">税込価格：¥514,800</div>
+      </div>
+
+      <div class="spec-summary">
+        <div class="spec-summary-title">主要スペック</div>
+        <div class="spec-row"><span class="spec-key">CPU</span><span class="spec-val">Intel Core Ultra 9-285K</span></div>
+        <div class="spec-row"><span class="spec-key">GPU</span><span class="spec-val">GeForce RTX 5080 16GB</span></div>
+        <div class="spec-row"><span class="spec-key">メモリ</span><span class="spec-val">DDR5-5600 32GB</span></div>
+        <div class="spec-row"><span class="spec-key">ストレージ</span><span class="spec-val">2TB NVMe Gen.4 SSD</span></div>
+        <div class="spec-row"><span class="spec-key">OS</span><span class="spec-val">Windows 11 Home</span></div>
+        <div class="spec-row"><span class="spec-key">電源</span><span class="spec-val">1000W 80Plus Gold</span></div>
+      </div>
+
+      <!-- 数量 -->
+      <div class="qty-select-row">
+        <span class="qty-label">数量：</span>
+        <div class="qty-ctrl">
+          <button class="qty-ctrl-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-display" id="qty-display">1</span>
+          <button class="qty-ctrl-btn" onclick="changeQty(1)">＋</button>
+        </div>
+      </div>
+
+      <button class="btn-add-cart" id="btn-add-cart" onclick="addToCart()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        カートに追加する
+      </button>
+
+      <button class="btn-favorite" id="btn-fav" onclick="toggleFav()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        お気に入りに追加
+      </button>
+
+      <div class="delivery-info">
+        🚚 <span>全国送料無料</span><br>
+        📦 お支払い確認後 <span>3〜7営業日</span> で発送<br>
+        🔧 <span>1年間保証</span> 付き・日本国内組み立て
+      </div>
+    </div>
+  </div>
+
+  <!-- タブ詳細 -->
+  <div class="detail-tabs">
+    <div class="tab-header">
+      <button class="tab-btn active" onclick="switchTab(this,'spec')">スペック詳細</button>
+      <button class="tab-btn" onclick="switchTab(this,'desc')">商品説明</button>
+      <button class="tab-btn" onclick="switchTab(this,'review')">レビュー (3)</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-spec">
+      <table class="spec-table">
+        <tr><th>CPU</th><td>インテル® Core™ Ultra 9-285K プロセッサ（24コア / 最大5.7GHz）</td></tr>
+        <tr><th>GPU</th><td>NVIDIA GeForce RTX™ 5080 16GB GDDR7</td></tr>
+        <tr><th>マザーボード</th><td>インテル Z890チップセット搭載 ASRock Z890 Steel Legend WiFi</td></tr>
+        <tr><th>メモリ</th><td>32GB DDR5-5600（16GB×2 デュアルチャネル）</td></tr>
+        <tr><th>ストレージ</th><td>2TB NVMe SSD Gen.4対応 WD製（読込 7,300MB/s）</td></tr>
+        <tr><th>CPUクーラー</th><td>水冷クーラー CoolerMaster製 240mm</td></tr>
+        <tr><th>電源ユニット</th><td>1000W ATX3.1 80Plus Gold認証</td></tr>
+        <tr><th>ケース</th><td>ミドルタワー Fractal Design Pop XL Silent</td></tr>
+        <tr><th>有線LAN</th><td>2.5ギガビットLAN</td></tr>
+        <tr><th>無線LAN</th><td>Wi-Fi 7 / Bluetooth 5.4</td></tr>
+        <tr><th>OS</th><td>Windows 11 Home（64bit）プレインストール</td></tr>
+        <tr><th>保証</th><td>1年間無償保証（延長保証オプションあり）</td></tr>
+        <tr><th>サイズ</th><td>W220 × D520 × H490 mm（概寸）</td></tr>
+        <tr><th>重量</th><td>約14kg</td></tr>
+      </table>
+    </div>
+
+    <div class="tab-panel" id="tab-desc">
+      <p style="color:var(--text2); font-size:13px; line-height:2; margin-bottom:16px;">
+        最新インテル® Core™ Ultra 9-285KとGeForce RTX™ 5080を搭載した、ハイエンドゲーミングPCです。4K解像度での高フレームレートゲーミングから、動画編集・3DCGレンダリングまで対応できる圧倒的な処理能力を誇ります。
+      </p>
+      <p style="color:var(--text2); font-size:13px; line-height:2; margin-bottom:16px;">
+        DDR5-5600メモリと最新NVMe Gen.4 SSDにより、ゲームのロード時間を大幅に短縮。Wi-Fi 7対応で次世代の超高速ワイヤレス通信にも対応しています。
+      </p>
+      <p style="color:var(--text2); font-size:13px; line-height:2;">
+        全パーツは当店スタッフが相性確認済み。組み立て・動作確認を行った上でお届けします。
+      </p>
+    </div>
+
+    <div class="tab-panel" id="tab-review">
+      <div class="review-avg">
+        <div class="review-score">4.7</div>
+        <div>
+          <div class="stars">★★★★★</div>
+          <div class="review-count">3件のレビュー</div>
+        </div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-header">
+          <span class="review-name">田中 K.</span>
+          <span class="review-stars">★★★★★</span>
+          <span class="review-date">2025年3月</span>
+        </div>
+        <div class="review-body">4Kで144fps出て最高です。組み立て品質も丁寧でケーブルの取り回しが綺麗でした。発送も早く大満足です。</div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-header">
+          <span class="review-name">山本 R.</span>
+          <span class="review-stars">★★★★☆</span>
+          <span class="review-date">2025年2月</span>
+        </div>
+        <div class="review-body">性能は文句なしです。初期設定がほぼ完了した状態で届いたのでとても助かりました。</div>
+      </div>
+
+      <div class="review-item">
+        <div class="review-header">
+          <span class="review-name">佐藤 M.</span>
+          <span class="review-stars">★★★★★</span>
+          <span class="review-date">2025年1月</span>
+        </div>
+        <div class="review-body">サポートも丁寧で安心して購入できました。動画編集も爆速でとても気に入っています。</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="footer-mount"></div>
+
+<!-- カートドロップダウンの注入先はshared.jsで生成 -->
+<script src="shared.js"></script>
+<script>
+  // ヘッダーとフッター
+  document.getElementById('header-mount').innerHTML = renderHeader();
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+
+  // カートドロップダウンをヘッダーのカートアイコンに追加
+  injectCartDropdown();
+
+  // ===== 画像切り替え =====
+  const images = [null, null, null, null]; // ★ ここにURLを入れる: ['URL1','URL2',...]
+
+  function selectThumb(el, idx) {
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const mainEl = document.getElementById('main-image');
+    if (images[idx]) {
+      mainEl.innerHTML = `<img src="${images[idx]}" alt="商品画像">`;
+    }
+  }
+
+  // ===== 数量 =====
+  let qty = 1;
+  function changeQty(d) {
+    qty = Math.max(1, qty + d);
+    document.getElementById('qty-display').textContent = qty;
+  }
+
+  // ===== お気に入り =====
+  function toggleFav() {
+    const btn = document.getElementById('btn-fav');
+    btn.classList.toggle('active');
+    btn.innerHTML = btn.classList.contains('active')
+      ? `<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> お気に入り済み`
+      : `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> お気に入りに追加`;
+  }
+
+  // ===== カートに追加 =====
+  function addToCart() {
+    const product = {
+      id: 'apex-z54mw',
+      name: 'APEX Z54MW / ハイエンドモデル',
+      price: 468000,
+      qty: qty,
+      img: images[0] || null
+    };
+    cartAdd(product);
+    const btn = document.getElementById('btn-add-cart');
+    btn.classList.add('added');
+    btn.innerHTML = `✓ カートに追加しました`;
+    setTimeout(() => {
+      btn.classList.remove('added');
+      btn.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> カートに追加する`;
+    }, 2000);
+  }
+
+  // ===== タブ =====
+  function switchTab(btn, id) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+</script>
+</body>
+</html>
