@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ログイン | NEXUS PC</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  .auth-wrap {
+    min-height: calc(100vh - 160px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 24px;
+  }
+  .auth-box {
+    width: 100%; max-width: 420px;
+    background: var(--card); border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+  }
+  .auth-header {
+    padding: 28px 32px 0;
+    text-align: center;
+  }
+  .auth-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--white); letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .auth-sub {
+    font-size: 12px; color: var(--text2);
+  }
+  .auth-body { padding: 28px 32px; }
+
+  .form-group { margin-bottom: 18px; }
+  .form-label {
+    display: block; font-size: 11px; font-weight: 700;
+    color: var(--text2); margin-bottom: 6px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .form-input {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); font-size: 13px; padding: 11px 14px;
+    outline: none; transition: border-color 0.2s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .form-input:focus { border-color: var(--accent); }
+
+  .btn-login {
+    width: 100%; background: var(--accent); color: #000;
+    border: none; font-size: 14px; font-weight: 700;
+    padding: 13px; cursor: pointer; transition: background 0.2s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 1px;
+  }
+  .btn-login:hover { background: #33ecff; }
+
+  .auth-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 22px 0;
+    color: var(--text2); font-size: 11px;
+  }
+  .auth-divider::before, .auth-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  .btn-register {
+    display: block; width: 100%;
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+    font-size: 13px; font-weight: 700; padding: 12px;
+    text-align: center; text-decoration: none;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .btn-register:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .auth-footer {
+    padding: 0 32px 24px;
+    text-align: center; font-size: 11px; color: var(--text2); line-height: 1.8;
+  }
+  .auth-footer a { color: var(--text2); text-decoration: underline; }
+  .auth-footer a:hover { color: var(--accent); }
+
+  .error-msg {
+    background: rgba(255,45,85,0.08); border: 1px solid rgba(255,45,85,0.3);
+    color: #ff2d55; font-size: 12px; padding: 10px 14px;
+    margin-bottom: 18px; display: none;
+  }
+  .error-msg.show { display: block; }
+</style>
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-title">MEMBER LOGIN</div>
+      <div class="auth-sub">会員の方はメールアドレスとパスワードでログイン</div>
+    </div>
+
+    <div class="auth-body">
+      <div class="error-msg" id="error-msg">メールアドレスまたはパスワードが正しくありません。</div>
+
+      <div class="form-group">
+        <label class="form-label">メールアドレス</label>
+        <input type="email" class="form-input" id="email" placeholder="example@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label class="form-label">パスワード</label>
+        <input type="password" class="form-input" id="password" placeholder="パスワードを入力" autocomplete="current-password">
+      </div>
+
+      <button class="btn-login" onclick="doLogin()">ログイン</button>
+
+      <div class="auth-divider">まだ会員登録がお済みでない方</div>
+
+      <a href="register.html" class="btn-register">新規会員登録（無料）</a>
+    </div>
+
+    <div class="auth-footer">
+      <a href="#">パスワードをお忘れの方</a><br>
+      ログインすることで<a href="terms.html">利用規約</a>・<a href="privacy.html">プライバシーポリシー</a>に同意したものとみなします。
+    </div>
+  </div>
+</div>
+
+<div id="footer-mount"></div>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderHeader();
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+  injectCartDropdown();
+
+  // すでにログイン済みなら直接マイページへ
+  if (localStorage.getItem('nexus_user')) {
+    location.href = 'mypage.html';
+  }
+
+  // Enterキーでログイン
+  document.getElementById('password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  function doLogin() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errEl = document.getElementById('error-msg');
+
+    if (!email || !password) {
+      errEl.textContent = 'メールアドレスとパスワードを入力してください。';
+      errEl.classList.add('show');
+      return;
+    }
+
+    // ★ デモ用：入力があれば仮ログイン（Firebase連携時に差し替え）
+    const user = { email, name: email.split('@')[0], since: '2026年3月' };
+    localStorage.setItem('nexus_user', JSON.stringify(user));
+
+    // ログイン後の遷移先（来た経路に戻る）
+    const redirect = new URLSearchParams(location.search).get('redirect') || 'mypage.html';
+    location.href = redirect;
+  }
+</script>
+</body>
+</html>

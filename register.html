@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新規会員登録 | NEXUS PC</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="common.css">
+<style>
+  .auth-wrap {
+    min-height: calc(100vh - 160px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 24px;
+  }
+  .auth-box {
+    width: 100%; max-width: 480px;
+    background: var(--card); border: 1px solid var(--border);
+    border-top: 2px solid var(--accent2);
+  }
+  .auth-header {
+    padding: 28px 32px 0;
+    text-align: center;
+  }
+  .auth-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 26px; font-weight: 700;
+    color: var(--white); letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+  .auth-sub {
+    font-size: 12px; color: var(--text2);
+  }
+  .auth-body { padding: 28px 32px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-label {
+    display: block; font-size: 11px; font-weight: 700;
+    color: var(--text2); margin-bottom: 6px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .form-input {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); font-size: 13px; padding: 11px 14px;
+    outline: none; transition: border-color 0.2s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .form-input:focus { border-color: var(--accent2); }
+
+  .btn-register {
+    width: 100%; background: var(--accent2); color: #fff;
+    border: none; font-size: 14px; font-weight: 700;
+    padding: 13px; cursor: pointer; transition: background 0.2s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 1px;
+  }
+  .btn-register:hover { background: #9b4fff; }
+
+  .back-login {
+    display: block; text-align: center;
+    margin-top: 18px; font-size: 12px; color: var(--text2);
+    text-decoration: none;
+  }
+  .back-login:hover { color: var(--accent); }
+
+  .auth-footer {
+    padding: 0 32px 24px;
+    text-align: center; font-size: 11px; color: var(--text2); line-height: 1.8;
+  }
+  .auth-footer a { color: var(--text2); text-decoration: underline; }
+  .auth-footer a:hover { color: var(--accent); }
+
+  .error-msg {
+    background: rgba(255,45,85,0.08); border: 1px solid rgba(255,45,85,0.3);
+    color: #ff2d55; font-size: 12px; padding: 10px 14px;
+    margin-bottom: 18px; display: none;
+  }
+  .error-msg.show { display: block; }
+</style>
+</head>
+<body>
+<div id="header-mount"></div>
+
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="auth-title">NEW MEMBER</div>
+      <div class="auth-sub">NEXUS PCへようこそ。必要事項を入力して会員登録してください。</div>
+    </div>
+
+    <div class="auth-body">
+      <div class="error-msg" id="error-msg"></div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">姓</label>
+          <input type="text" class="form-input" id="last-name" placeholder="山田" autocomplete="family-name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">名</label>
+          <input type="text" class="form-input" id="first-name" placeholder="太郎" autocomplete="given-name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">メールアドレス</label>
+        <input type="email" class="form-input" id="email" placeholder="example@email.com" autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">パスワード（8文字以上）</label>
+        <input type="password" class="form-input" id="password" placeholder="8文字以上で入力" autocomplete="new-password">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">パスワード（確認）</label>
+        <input type="password" class="form-input" id="password-confirm" placeholder="もう一度入力" autocomplete="new-password">
+      </div>
+
+      <button class="btn-register" onclick="doRegister()">会員登録する</button>
+
+      <a href="login.html" class="back-login">← すでに会員の方はこちら（ログイン）</a>
+    </div>
+
+    <div class="auth-footer">
+      登録することで<a href="terms.html">利用規約</a>・<a href="privacy.html">プライバシーポリシー</a>に同意したものとみなします。
+    </div>
+  </div>
+</div>
+
+<div id="footer-mount"></div>
+<script src="shared.js"></script>
+<script>
+  document.getElementById('header-mount').innerHTML = renderHeader();
+  document.getElementById('footer-mount').innerHTML = renderFooter();
+  injectCartDropdown();
+
+  // すでにログイン済みなら直接マイページへ
+  if (localStorage.getItem('nexus_user')) {
+    location.href = 'mypage.html';
+  }
+
+  function doRegister() {
+    const lastName = document.getElementById('last-name').value.trim();
+    const firstName = document.getElementById('first-name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    const errEl = document.getElementById('error-msg');
+
+    if (!lastName || !firstName || !email || !password || !passwordConfirm) {
+      errEl.textContent = 'すべての項目を入力してください。';
+      errEl.classList.add('show');
+      return;
+    }
+    if (password.length < 8) {
+      errEl.textContent = 'パスワードは8文字以上で設定してください。';
+      errEl.classList.add('show');
+      return;
+    }
+    if (password !== passwordConfirm) {
+      errEl.textContent = 'パスワードが一致しません。';
+      errEl.classList.add('show');
+      return;
+    }
+
+    errEl.classList.remove('show');
+
+    // ★ デモ用：localStorageに仮保存（Firebase連携時に差し替え）
+    const now = new Date();
+    const since = `${now.getFullYear()}年${now.getMonth() + 1}月`;
+    const user = { email, name: `${lastName} ${firstName}`, since };
+    localStorage.setItem('nexus_user', JSON.stringify(user));
+
+    location.href = 'mypage.html';
+  }
+</script>
+</body>
+</html>
